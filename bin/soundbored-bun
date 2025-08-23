@@ -1,0 +1,2 @@
+#!/home/christo/.bun/bin/bun
+import '../src/cli.tsx';

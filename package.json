@@ -5,16 +5,15 @@
   "description": "CLI tool for fuzzy searching and triggering sounds from SoundBored API",
   "main": "src/cli.tsx",
   "bin": {
-    "soundbored": "bin/soundbored"
+    "soundbored": "bin/soundbored-bun"
   },
   "scripts": {
-    "build": "tsc --noEmit",
-    "start": "tsx src/cli.tsx",
-    "dev": "tsx src/cli.tsx",
+    "build": "bun build src/cli.tsx --outdir dist --target bun",
+    "start": "bun src/cli.tsx",
+    "dev": "bun src/cli.tsx",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "jest",
-    "prepare": "npm run build"
   },
   "keywords": [
     "cli",

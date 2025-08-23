@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text } from 'ink';
+import { Box, Text, useStdout } from 'ink';
 import { Sound } from '../types';
 
 interface SoundListProps {
@@ -17,6 +17,8 @@ const SoundList: React.FC<SoundListProps> = ({
   isPlaying,
   lastPlayedSound 
 }) => {
+  const { stdout } = useStdout();
+  
   if (sounds.length === 0) {
     return (
       <Box>
@@ -25,14 +27,28 @@ const SoundList: React.FC<SoundListProps> = ({
     );
   }
 
-  // Calculate visible window (show 10 items at a time)
-  const windowSize = 10;
-  const startIndex = Math.max(0, Math.min(selectedIndex - Math.floor(windowSize / 2), sounds.length - windowSize));
+  // Calculate visible window based on terminal height
+  // Reserve lines for: header (2), search (2), status bar (2), padding (2)
+  const reservedLines = 8;
+  const terminalHeight = stdout?.rows || 24;
+  const windowSize = Math.max(5, Math.min(sounds.length, terminalHeight - reservedLines));
+  
+  // Center the selected item in the visible window when possible
+  let startIndex = 0;
+  if (sounds.length > windowSize) {
+    // Try to center the selected item
+    startIndex = selectedIndex - Math.floor(windowSize / 2);
+    // Ensure we don't go past the beginning
+    startIndex = Math.max(0, startIndex);
+    // Ensure we don't leave empty space at the bottom
+    startIndex = Math.min(startIndex, sounds.length - windowSize);
+  }
+  
   const endIndex = Math.min(sounds.length, startIndex + windowSize);
   const visibleSounds = sounds.slice(startIndex, endIndex);
 
   return (
-    <Box flexDirection="column">
+    <Box flexDirection="column" width="100%">
       {startIndex > 0 && (
         <Text color="gray" dimColor>
           ↑ {startIndex} more...
@@ -45,7 +61,7 @@ const SoundList: React.FC<SoundListProps> = ({
         const isCurrentlyPlaying = isPlaying && lastPlayedSound?.id === sound.id;
         
         return (
-          <Box key={`sound-${sound.id}-${actualIndex}`}>
+          <Box key={`sound-${sound.id}-${actualIndex}`} width="100%">
             <Box width={3}>
               {isCurrentlyPlaying && <Text color="green">▶ </Text>}
               {isSelected && !isCurrentlyPlaying && <Text color="cyan">→ </Text>}
@@ -56,6 +72,7 @@ const SoundList: React.FC<SoundListProps> = ({
               <Text
                 color={isSelected ? 'cyan' : isCurrentlyPlaying ? 'green' : 'white'}
                 bold={isSelected || isCurrentlyPlaying}
+                wrap="truncate"
               >
                 {sound.filename}
               </Text>

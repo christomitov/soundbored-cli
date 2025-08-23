@@ -48,16 +48,51 @@ const App: React.FC<AppProps> = ({ initialQuery = '' }) => {
     
     if (!queryToFilter) {
       setFilteredSounds(sounds);
-      setSelectedIndex(0);
+      // Don't reset index when clearing search after playing
+      if (!lastSearchQuery) {
+        setSelectedIndex(0);
+      }
       return;
     }
 
-    const fuzzyResult = fuzzy.filter(queryToFilter, sounds, {
-      extract: (sound) => `${sound.filename} ${sound.tags?.join(' ') || ''}`,
-    });
-
-    setFilteredSounds(fuzzyResult.map(r => r.original));
-    setSelectedIndex(0);
+    let newFilteredSounds: Sound[];
+    
+    // Check if search starts with a quote for exact matching
+    const isExactMatch = queryToFilter.startsWith('"');
+    
+    if (isExactMatch) {
+      // Remove opening quote (and closing quote if present)
+      let exactQuery = queryToFilter.slice(1);
+      if (exactQuery.endsWith('"')) {
+        exactQuery = exactQuery.slice(0, -1);
+      }
+      exactQuery = exactQuery.toLowerCase();
+      
+      newFilteredSounds = sounds.filter(sound => {
+        // Only search in filename when using quotes, not tags
+        const searchableText = sound.filename.toLowerCase();
+        // Create regex for word boundary matching - matches words starting with the query
+        // Escape special regex characters in the query
+        const escapedQuery = exactQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // Match at start of string or after space/punctuation
+        const wordBoundaryRegex = new RegExp(`(^|\\s|[^a-zA-Z0-9])${escapedQuery}`, 'i');
+        return wordBoundaryRegex.test(searchableText);
+      });
+    } else {
+      // Use fuzzy search for normal queries
+      const fuzzyResult = fuzzy.filter(queryToFilter, sounds, {
+        extract: (sound) => `${sound.filename} ${sound.tags?.join(' ') || ''}`,
+      });
+      newFilteredSounds = fuzzyResult.map(r => r.original);
+    }
+    
+    setFilteredSounds(newFilteredSounds);
+    
+    // Only reset to first item when actively typing in search
+    // Don't reset when just clearing search after playing (searchQuery empty but lastSearchQuery set)
+    if (searchQuery && searchQuery !== lastSearchQuery) {
+      setSelectedIndex(0);
+    }
   }, [searchQuery, lastSearchQuery, sounds]);
 
   // Handle playing a sound
@@ -157,21 +192,16 @@ const App: React.FC<AppProps> = ({ initialQuery = '' }) => {
   }
 
   return (
-    <Box flexDirection="column" height="100%">
-      <Box marginBottom={1}>
-        <Text bold color="cyan">
-          🎵 SoundBored CLI
-        </Text>
-        <Text color="gray"> - {sounds.length} sounds loaded</Text>
+    <Box flexDirection="column" height="100%" width="100%">
+      <Box flexShrink={0} width="100%">
+        <SearchInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search sounds... (Ctrl+C to clear, ESC to exit)"
+        />
       </Box>
 
-      <SearchInput
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Search sounds... (Ctrl+C to clear, ESC to exit)"
-      />
-
-      <Box flexGrow={1} flexDirection="column" marginY={1}>
+      <Box flexGrow={1} flexDirection="column" marginY={1} overflow="hidden" width="100%">
         <SoundList
           sounds={filteredSounds}
           selectedIndex={selectedIndex}
@@ -181,13 +211,15 @@ const App: React.FC<AppProps> = ({ initialQuery = '' }) => {
         />
       </Box>
 
-      <StatusBar
-        totalSounds={sounds.length}
-        filteredSounds={filteredSounds.length}
-        ctrlCPressed={ctrlCPressed}
-        isPlaying={isPlaying}
-        lastPlayedSound={lastPlayedSound}
-      />
+      <Box flexShrink={0} width="100%">
+        <StatusBar
+          totalSounds={sounds.length}
+          filteredSounds={filteredSounds.length}
+          ctrlCPressed={ctrlCPressed}
+          isPlaying={isPlaying}
+          lastPlayedSound={lastPlayedSound}
+        />
+      </Box>
     </Box>
   );
 };

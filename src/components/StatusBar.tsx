@@ -23,8 +23,9 @@ const StatusBar: React.FC<StatusBarProps> = ({
       borderColor="gray"
       paddingX={1}
       flexDirection="column"
+      width="100%"
     >
-      <Box justifyContent="space-between">
+      <Box justifyContent="space-between" width="100%">
         <Box>
           <Text color="gray">
             {filteredSounds}/{totalSounds} sounds

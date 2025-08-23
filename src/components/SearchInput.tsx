@@ -10,16 +10,18 @@ interface SearchInputProps {
 
 const SearchInput: React.FC<SearchInputProps> = ({ value, onChange, placeholder }) => {
   return (
-    <Box>
+    <Box width="100%">
       <Box marginRight={1}>
         <Text color="yellow">›</Text>
       </Box>
-      <TextInput
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        showCursor
-      />
+      <Box flexGrow={1}>
+        <TextInput
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          showCursor
+        />
+      </Box>
     </Box>
   );
 };
