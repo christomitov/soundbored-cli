@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { spawn } from 'child_process';
+import { existsSync } from 'fs';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const cliPath = join(__dirname, '../src/cli.tsx');
+
+// Try to find tsx in multiple locations
+const possibleTsxPaths = [
+  join(__dirname, '../node_modules/.bin/tsx'),
+  join(__dirname, '../../.bin/tsx'),
+  'tsx' // Fallback to global tsx
+];
+
+let tsxPath = possibleTsxPaths.find(path => path === 'tsx' || existsSync(path));
+
+if (!tsxPath) {
+  console.error('Error: tsx not found. Please run npm install');
+  process.exit(1);
+}
+
+// Spawn tsx to run our CLI with proper TTY handling
+const child = spawn(tsxPath, [cliPath, ...process.argv.slice(2)], {
+  stdio: 'inherit',
+  env: { ...process.env, FORCE_COLOR: '1' },
+  shell: false
+});
+
+child.on('error', (err) => {
+  console.error('Failed to start soundbored:', err.message);
+  process.exit(1);
+});
+
+child.on('exit', (code) => {
+  process.exit(code || 0);
+});
