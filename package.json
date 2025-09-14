@@ -3,7 +3,7 @@
   "version": "0.1.5",
   "private": false,
   "type": "module",
-  "description": "CLI tool for fuzzy searching and triggering sounds from SoundBored API",
+  "description": "CLI tool for the Discord SoundBored app",
   "main": "dist/cli.js",
   "bin": {
     "soundbored": "bin/soundbored"
