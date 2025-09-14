@@ -12,6 +12,9 @@ build({
   target: 'node16',
   outfile: join(__dirname, 'dist/cli.js'),
   format: 'esm',
+  banner: {
+    js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
+  },
   loader: {
     '.tsx': 'tsx',
     '.ts': 'ts',
