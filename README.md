@@ -1,6 +1,6 @@
 # soundbored
 
-CLI tool for the Discord SoundBored app. Search and play sounds from your SoundBored server right from the terminal.
+CLI tool for the Discord Soundbored app. Search and play sounds from your Soundbored server right from the terminal.
 
 ## Features
 
@@ -13,7 +13,7 @@ CLI tool for the Discord SoundBored app. Search and play sounds from your SoundB
 
 - Node.js 16.0.0 or higher
 - npm or yarn
-- Access to a SoundBored API instance
+- Access to a Soundbored API instance
 
 ## Installation
 
@@ -173,4 +173,4 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ## Author
 
-Created for the SoundBored sound effects system.
+Created for the Soundbored sound effects system.

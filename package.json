@@ -3,7 +3,7 @@
   "version": "0.1.6",
   "private": false,
   "type": "module",
-  "description": "CLI tool for the Discord SoundBored app",
+  "description": "CLI tool for the Discord Soundbored app",
   "main": "dist/cli.js",
   "bin": {
     "soundbored": "bin/soundbored"

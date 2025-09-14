@@ -1,7 +1,7 @@
 {
   "name": "soundbored",
   "version": "0.1.0",
-  "description": "CLI tool for fuzzy searching and triggering sounds from SoundBored API",
+  "description": "CLI tool for fuzzy searching and triggering sounds from Soundbored API",
   "type": "module",
   "main": "dist/cli.js",
   "bin": {

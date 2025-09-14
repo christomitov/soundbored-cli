@@ -19,7 +19,7 @@ if (process.argv.length <= 2) {
   // Setup CLI program metadata
   program
     .name('soundbored')
-    .description('CLI tool for fuzzy searching and playing sounds from SoundBored API')
+    .description('CLI tool for fuzzy searching and playing sounds from Soundbored API')
     .version('0.1.0');
 
   // Register all commands

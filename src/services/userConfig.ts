@@ -53,7 +53,7 @@ export const saveUserConfig = async (config: Config): Promise<void> => {
 };
 
 const promptForConfig = async (): Promise<Config> => {
-  console.log(chalk.yellow('First-time setup: Configure SoundBored API access'));
+  console.log(chalk.yellow('First-time setup: Configure Soundbored API access'));
   const answers = await inquirer.prompt([
     {
       type: 'input',
