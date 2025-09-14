@@ -29,7 +29,7 @@ Then run:
 soundbored
 ```
 
-### Local Development
+### From Source
 
 1. Clone the repository:
 ```bash
