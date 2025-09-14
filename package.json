@@ -1,6 +1,6 @@
 {
   "name": "soundbored",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "type": "module",
   "description": "CLI tool for fuzzy searching and triggering sounds from SoundBored API",
@@ -8,7 +8,6 @@
   "bin": {
     "soundbored": "bin/soundbored"
   },
-  
   "scripts": {
     "build": "node build.js",
     "start": "node dist/cli.js",
