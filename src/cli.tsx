@@ -5,6 +5,7 @@ import { Command } from 'commander';
 import dotenv from 'dotenv';
 import chalk from 'chalk';
 import App from './components/App';
+import pkg from '../package.json';
 import { ensureUserConfig } from './services/userConfig';
 import { registerCommands } from './commands';
 
@@ -17,7 +18,7 @@ const program = new Command();
 program
   .name('soundbored')
   .description('CLI tool for fuzzy searching and playing sounds from Soundbored API')
-  .version('0.1.0');
+  .version((pkg as any).version || '0.0.0');
 
 // Interactive mode (default when no args)
 program
