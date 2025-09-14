@@ -1,6 +1,6 @@
-# soundbored-cli
+# soundbored
 
-A command-line interface for quickly searching and playing sounds from your SoundBored API.
+CLI tool for the Discord SoundBored app. Search and play sounds from your SoundBored server right from the terminal.
 
 ## Features
 
@@ -16,6 +16,18 @@ A command-line interface for quickly searching and playing sounds from your Soun
 - Access to a SoundBored API instance
 
 ## Installation
+
+### Install
+
+```bash
+npm i -g soundbored
+```
+
+Then run:
+
+```bash
+soundbored
+```
 
 ### From Source
 
