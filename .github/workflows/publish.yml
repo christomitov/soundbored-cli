@@ -1,0 +1,60 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write  # required for npm provenance
+
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"   # Or set node-version: '20.x'
+          registry-url: "https://registry.npmjs.org"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify package contents and pack
+        id: pack
+        run: |
+          set -e
+          # Show what would be published
+          npm pack --dry-run
+          # Create a tarball to validate install
+          PKG_NAME=$(node -p "require('./package.json').name")
+          VER=$(node -p "require('./package.json').version")
+          TARBALL="$PKG_NAME-$VER.tgz"
+          npm pack
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+
+      - name: Install tarball globally and run help
+        run: |
+          set -e
+          # Use a local prefix to avoid needing sudo
+          npm config set prefix "$HOME/.npm-global"
+          echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
+          npm i -g "./${{ steps.pack.outputs.tarball }}"
+          soundbored --help
+
+      - name: Publish to npm (with provenance)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
+

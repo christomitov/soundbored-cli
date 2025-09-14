@@ -1,0 +1,6 @@
+README.md
+*.map
+tsconfig.json
+build.js
+src/
+node_modules/

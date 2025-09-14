@@ -1,20 +1,30 @@
 {
-  "name": "soundbored-cli",
+  "name": "soundbored",
   "version": "0.1.0",
+  "private": false,
   "type": "module",
   "description": "CLI tool for fuzzy searching and triggering sounds from SoundBored API",
-  "main": "src/cli.tsx",
+  "main": "dist/cli.js",
   "bin": {
-    "soundbored": "bin/soundbored-bun"
+    "soundbored": "bin/soundbored"
   },
+  
   "scripts": {
-    "build": "bun build src/cli.tsx --outdir dist --target bun",
-    "start": "bun src/cli.tsx",
-    "dev": "bun src/cli.tsx",
+    "build": "node build.js",
+    "start": "node dist/cli.js",
+    "dev": "node --enable-source-maps dist/cli.js",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "jest",
+    "prepublishOnly": "npm run build",
+    "release:prep": "node scripts/make-release.mjs",
+    "release:publish": "npm run build && node scripts/make-release.mjs && npm publish ./release --access public"
   },
+  "publishConfig": {},
+  "files": [
+    "dist/cli.js",
+    "bin/soundbored"
+  ],
   "keywords": [
     "cli",
     "sounds",
