@@ -52,10 +52,6 @@ On first run, the CLI prompts you for:
 
 These values are saved and automatically loaded next time.
 
-Optional: you can pre-seed via environment variables on first run:
-- `SOUNDBORED_API_BASE_URL`
-- `SOUNDBORED_TOKEN`
-
 ## Usage
 
 ### Basic Usage
@@ -151,7 +147,7 @@ This CLI requires an interactive terminal. Make sure you're running it directly 
 
 ### API Connection Issues
 
-1. Check your `.env` file has the correct `SOUNDBORED_TOKEN`
+1. Run `soundbored config --show` and confirm the Base URL and token
 2. Verify the API URL is accessible
 3. Ensure you have network connectivity
 
