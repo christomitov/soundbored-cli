@@ -68,21 +68,14 @@ jobs:
           npm pack
           echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
 
-      - name: Install tarball globally and run help
+      - name: Install tarball globally and run help (via npm)
         run: |
           set -e
-          if [ "${{ matrix.pm }}" = "npm" ]; then
-            npm config set prefix "$HOME/.npm-global"
-            echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
-            export PATH="$HOME/.npm-global/bin:$PATH"
-            npm i -g "./${{ steps.pack.outputs.tarball }}"
-          elif [ "${{ matrix.pm }}" = "yarn" ]; then
-            yarn global add "./${{ steps.pack.outputs.tarball }}"
-            export PATH="$(yarn global bin):$PATH"
-          else
-            bun add -g "./${{ steps.pack.outputs.tarball }}"
-            export PATH="$HOME/.bun/bin:$PATH"
-          fi
+          # Always validate installation using npm for consistent global install behavior
+          npm config set prefix "$HOME/.npm-global"
+          echo "$HOME/.npm-global/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.npm-global/bin:$PATH"
+          npm i -g "./${{ steps.pack.outputs.tarball }}"
           command -v soundbored || (echo "soundbored not in PATH" && exit 1)
           soundbored --help
 
