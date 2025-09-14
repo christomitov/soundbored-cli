@@ -1,6 +1,6 @@
 {
   "name": "soundbored",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": false,
   "type": "module",
   "description": "CLI tool for the Discord SoundBored app",
