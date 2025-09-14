@@ -12,9 +12,6 @@ build({
   target: 'node16',
   outfile: join(__dirname, 'dist/cli.js'),
   format: 'esm',
-  external: [
-    'react-devtools-core'
-  ],
   loader: {
     '.tsx': 'tsx',
     '.ts': 'ts',
