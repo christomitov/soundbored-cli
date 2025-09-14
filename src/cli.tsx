@@ -5,6 +5,8 @@ import { Command } from 'commander';
 import dotenv from 'dotenv';
 import chalk from 'chalk';
 import App from './components/App';
+import { ensureUserConfig } from './services/userConfig';
+import { registerCommands } from './commands';
 
 // Load environment variables
 dotenv.config();
@@ -20,7 +22,7 @@ program
 // Interactive mode (default when no args)
 program
   .argument('[query]', 'Initial search query')
-  .action((query) => {
+  .action(async (query) => {
     // Check if we can use raw mode (required for Ink)
     if (!process.stdin.isTTY || !process.stdout.isTTY) {
       console.error(chalk.red('Error: This CLI requires an interactive terminal (TTY).'));
@@ -36,6 +38,8 @@ program
     }
 
     try {
+      // Ensure user config is set up before starting UI
+      await ensureUserConfig();
       // Start the React Ink app with exitOnCtrlC disabled
       const app = render(<App initialQuery={query} />, {
         exitOnCtrlC: false  // We'll handle Ctrl+C ourselves
@@ -46,6 +50,9 @@ program
       process.exit(1);
     }
   });
+
+// Register subcommands (e.g., config, search)
+registerCommands(program);
 
 // Parse arguments
 program.parse(process.argv);

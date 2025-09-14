@@ -44,15 +44,17 @@ Now you can use `soundbored` command from anywhere in your terminal!
 
 ## Configuration
 
-Create a `.env` file in the project root to customize your configuration:
+Configuration is stored at `~/.config/soundbored/config.json`.
 
-```env
-SOUNDBORED_TOKEN=REDACTED
-```
+On first run, the CLI prompts you for:
+- Base URL (just the site, e.g. `https://soundbored.example.com`)
+- API token
 
-Default configuration:
-- API URL: `https://example.invalid
-- Default token is provided (can be overridden)
+These values are saved and automatically loaded next time.
+
+Optional: you can pre-seed via environment variables on first run:
+- `SOUNDBORED_API_BASE_URL`
+- `SOUNDBORED_TOKEN`
 
 ## Usage
 
@@ -68,6 +70,23 @@ soundbored
 Start with a pre-filled search:
 ```bash
 soundbored "airhorn"
+```
+
+### Manage Config
+
+Show current config and where it’s stored:
+```bash
+soundbored config --show
+```
+
+Update values non-interactively:
+```bash
+soundbored config --api https://soundbored.example.com --token YOUR_TOKEN
+```
+
+Run interactive reconfiguration:
+```bash
+soundbored config
 ```
 
 ### Keyboard Shortcuts

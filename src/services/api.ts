@@ -1,19 +1,10 @@
 import axios from 'axios';
-import chalk from 'chalk';
-import dotenv from 'dotenv';
-import { Sound, ApiResponse, Config } from '../types';
+import { Sound, ApiResponse } from '../types';
+import { ensureUserConfig } from './userConfig';
 
-// Load environment variables from .env file
-dotenv.config();
-
-// Default config (can be overridden)
-const defaultConfig: Config = {
-  apiBaseUrl: 'https://example.invalid',
-  token: process.env.SOUNDBORED_TOKEN || 'REDACTED',
-};
-
-// Create axios instance
-const createApiClient = (config: Config = defaultConfig) => {
+// Create axios instance using persisted user config
+const createApiClient = async () => {
+  const config = await ensureUserConfig();
   return axios.create({
     baseURL: config.apiBaseUrl,
     headers: {
@@ -29,14 +20,14 @@ let soundsCache: Sound[] | null = null;
 /**
  * Fetch all sounds from the API
  */
-export const fetchSounds = async (config: Config = defaultConfig): Promise<Sound[]> => {
+export const fetchSounds = async (): Promise<Sound[]> => {
   // Return from cache if already fetched
   if (soundsCache) {
     return soundsCache;
   }
 
   try {
-    const client = createApiClient(config);
+    const client = await createApiClient();
     const response = await client.get<ApiResponse>('/sounds');
 
     if (Array.isArray(response.data)) {
@@ -65,9 +56,9 @@ export const fetchSounds = async (config: Config = defaultConfig): Promise<Sound
 /**
  * Play a sound by ID
  */
-export const playSound = async (id: number, config: Config = defaultConfig): Promise<void> => {
+export const playSound = async (id: number): Promise<void> => {
   try {
-    const client = createApiClient(config);
+    const client = await createApiClient();
     await client.post(`/sounds/${id}/play`);
   } catch (error) {
     if (axios.isAxiosError(error)) {

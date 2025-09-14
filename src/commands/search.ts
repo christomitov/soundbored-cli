@@ -3,6 +3,7 @@ import inquirer from 'inquirer';
 import inquirerAutocomplete from 'inquirer-autocomplete-prompt';
 import chalk from 'chalk';
 import { fetchSounds, playSound } from '../services/api';
+import { ensureUserConfig } from '../services/userConfig';
 import fuzzy from 'fuzzy';
 import readline from 'readline';
 
@@ -22,6 +23,7 @@ let rlCreated = false;
 // Export the interactive mode function
 export const startInteractiveMode = async () => {
   try {
+    await ensureUserConfig();
     console.log(chalk.green('✓ Loading sounds...'));
     const allSounds = await fetchSounds();
     console.log(chalk.green(`✓ Loaded ${allSounds.length} sounds`));
