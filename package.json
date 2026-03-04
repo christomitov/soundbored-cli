@@ -6,7 +6,7 @@
   "description": "CLI tool for the Discord Soundbored app",
   "main": "dist/cli.js",
   "bin": {
-    "soundbored": "bin/soundbored"
+    "soundbored": "dist/cli.js"
   },
   "scripts": {
     "build": "node build.js",
@@ -15,14 +15,11 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "jest",
-    "prepublishOnly": "npm run build",
-    "release:prep": "node scripts/make-release.mjs",
-    "release:publish": "npm run build && node scripts/make-release.mjs && npm publish ./release --access public"
+    "prepublishOnly": "npm run build"
   },
   "publishConfig": {},
   "files": [
-    "dist/cli.js",
-    "bin/soundbored"
+    "dist/cli.js"
   ],
   "keywords": [
     "cli",

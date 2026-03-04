@@ -136,7 +136,7 @@ npm run format
 
 ```
 soundbored-cli/
-├── bin/           # CLI entry point
+├── dist/          # Bundled CLI output
 ├── src/
 │   ├── cli.tsx    # Main CLI setup
 │   ├── components/
