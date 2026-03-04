@@ -18,10 +18,15 @@ export const createFuzzySearch = (sounds: Sound[]): Fuse<Sound> => {
 /**
  * Perform a search and return ranked results
  */
-export const searchSounds = (fuse: Fuse<Sound>, query: string, limit: number = 10): Sound[] => {
+export const searchSounds = (
+  fuse: Fuse<Sound>,
+  query: string,
+  limit: number = 10,
+  allSounds: Sound[] = []
+): Sound[] => {
   if (!query.trim()) {
     // If no query, return first 'limit' sounds
-    return (fuse as any)._docs.slice(0, limit);
+    return allSounds.slice(0, limit);
   }
 
   const results = fuse.search(query);

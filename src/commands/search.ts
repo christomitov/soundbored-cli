@@ -27,12 +27,12 @@ export const startInteractiveMode = async () => {
     console.log(chalk.green('✓ Loading sounds...'));
     const allSounds = await fetchSounds();
     console.log(chalk.green(`✓ Loaded ${allSounds.length} sounds`));
-    
+
     // Function for interactive searching with fuzzy matching
     const searchSounds = async (input = '') => {
       // Use either provided input or saved global search
       const searchTerm = (input !== undefined ? input : globalSearch).toLowerCase();
-      
+
       // If no search term, return all sounds
       if (!searchTerm) {
         return allSounds.map((sound) => ({
@@ -40,12 +40,12 @@ export const startInteractiveMode = async () => {
           value: sound,
         }));
       }
-      
+
       // Use fuzzy search for better matching
       const fuzzyResult = fuzzy.filter(searchTerm, allSounds, {
         extract: (sound) => `${sound.filename} ${sound.tags?.join(' ') || ''}`,
       });
-      
+
       // Format the results
       return fuzzyResult.map((result) => ({
         name: `${result.original.filename} ${
@@ -56,7 +56,7 @@ export const startInteractiveMode = async () => {
         value: result.original,
       }));
     };
-    
+
     // Setup readline interface for proper SIGINT handling
     // Must be created after Inquirer is used
     if (!rlCreated) {
@@ -64,7 +64,7 @@ export const startInteractiveMode = async () => {
         input: process.stdin,
         output: process.stdout,
       });
-      
+
       rl.on('SIGINT', () => {
         const now = Date.now();
         if (now - lastCtrlCTime < CTRL_C_TIMEOUT) {
@@ -74,15 +74,15 @@ export const startInteractiveMode = async () => {
           lastCtrlCTime = now;
           globalSearch = '';
           console.log(chalk.yellow('\nSearch cleared. Press Ctrl+C again to exit.'));
-          
+
           // Return to prevent the process from exiting
           return;
         }
       });
-      
+
       rlCreated = true;
     }
-    
+
     // Main search loop
     while (true) {
       try {
@@ -92,16 +92,16 @@ export const startInteractiveMode = async () => {
             type: 'autocomplete',
             name: 'selectedSound',
             message: 'Search for a sound:',
-            source: async (_: any, input: string | undefined) => {
+            source: async (_: unknown, input: string | undefined) => {
               // If input is provided, update global search
               if (input !== undefined) {
                 globalSearch = input;
               }
               return searchSounds(input);
-            }
-          }
+            },
+          },
         ]);
-        
+
         // Handle the selected sound
         if (selectedSound) {
           console.log(chalk.cyan(`▶ Playing: ${selectedSound.filename}`));
@@ -112,7 +112,7 @@ export const startInteractiveMode = async () => {
         if (error instanceof Error && error.message === 'Prompt was canceled') {
           continue;
         }
-        
+
         // Log other errors but continue the loop
         console.error(chalk.red('Error:'), error instanceof Error ? error.message : String(error));
       }

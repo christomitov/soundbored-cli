@@ -17,8 +17,26 @@ const program = new Command();
 // Setup CLI program metadata
 program
   .name('soundbored')
-  .description('CLI tool for fuzzy searching and playing sounds from Soundbored API')
-  .version((pkg as any).version || '0.0.0');
+  .description('CLI tool for searching, playing, and uploading sounds from Soundbored API')
+  .version((pkg as any).version || '0.0.0')
+  .addHelpText(
+    'after',
+    `
+Agent-friendly quick start:
+  1) Configure once (or set env vars):
+     SOUNDBORED_BASE_URL=https://soundbored.example.com
+     SOUNDBORED_TOKEN=sb_xxx
+
+  2) Preview upload request without sending it:
+     soundbored upload ./clip.mp3 --name "Clip Name" --dry-run
+
+  3) Upload a local file:
+     soundbored upload ./clip.mp3 --name "Clip Name" --tag meme --volume 90 --join
+
+  4) Get machine-readable output:
+     soundbored upload ./clip.mp3 --name "Clip Name" --json
+`
+  );
 
 // Interactive mode (default when no args)
 program

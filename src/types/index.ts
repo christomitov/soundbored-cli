@@ -22,3 +22,17 @@ export interface Config {
   apiBaseUrl: string;
   token: string;
 }
+
+export interface UploadSoundInput {
+  filePath: string;
+  name: string;
+  tags?: string[];
+  volume?: number;
+  isJoinSound?: boolean;
+  sourceType?: 'local';
+}
+
+export interface UploadSoundResult {
+  status: number;
+  data: unknown;
+}

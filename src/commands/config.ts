@@ -1,9 +1,19 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { ensureUserConfig, loadUserConfig, saveUserConfig, getConfigPath, normalizeApiBaseUrl, apiBaseToBaseUrl } from '../services/userConfig';
+import {
+  ensureUserConfig,
+  loadUserConfig,
+  saveUserConfig,
+  getConfigPath,
+  normalizeApiBaseUrl,
+  apiBaseToBaseUrl,
+} from '../services/userConfig';
 
-const redact = (token: string) => (token.length <= 8 ? '*'.repeat(token.length) : token.slice(0, 4) + '*'.repeat(token.length - 8) + token.slice(-4));
+const redact = (token: string) =>
+  token.length <= 8
+    ? '*'.repeat(token.length)
+    : token.slice(0, 4) + '*'.repeat(token.length - 8) + token.slice(-4);
 
 export const configCommand = (program: Command): void => {
   program
@@ -44,7 +54,8 @@ export const configCommand = (program: Command): void => {
           name: 'baseUrl',
           message: 'Base URL:',
           default: apiBaseToBaseUrl(cfg.apiBaseUrl),
-          validate: (input: string) => (input && input.startsWith('http') ? true : 'Enter a valid URL'),
+          validate: (input: string) =>
+            input && input.startsWith('http') ? true : 'Enter a valid URL',
         },
         {
           type: 'password',
@@ -56,7 +67,10 @@ export const configCommand = (program: Command): void => {
         },
       ]);
 
-      await saveUserConfig({ apiBaseUrl: normalizeApiBaseUrl(answers.baseUrl), token: answers.token.trim() });
+      await saveUserConfig({
+        apiBaseUrl: normalizeApiBaseUrl(answers.baseUrl),
+        token: answers.token.trim(),
+      });
       console.log(chalk.green('✓ Configuration saved'));
     });
 };
